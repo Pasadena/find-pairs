@@ -1,23 +1,20 @@
 <script lang="ts">
-	import type { PlayingCard } from '$core/types';
+	import { type PlayingCard, CardState } from '$core/types';
 
 	export let card: PlayingCard;
-	export let revealed = false;
-	export let active = false;
+	export let state: CardState = CardState.INACTIVE;
 	export let onCardSelected: (card: PlayingCard) => void;
 
 	function onClick() {
-		onCardSelected(card);
+		if (state !== CardState.FOUND) {
+			onCardSelected(card);
+		}
 	}
 </script>
 
-<div class="card" on:click={onClick}>
-	{#if !revealed}
-		{#if active}
-			<img src={card.path} alt={card.id} />
-		{:else}
-			<img src="images/question_mark.png" alt={card.id} />
-		{/if}
+<div class="card {state == CardState.FOUND && 'found'}" on:click={onClick}>
+	{#if state !== CardState.FOUND}
+		<img src={state === CardState.ACTIVE ? card.path : 'images/question_mark.png'} alt={card.id} />
 	{/if}
 </div>
 
@@ -32,10 +29,21 @@
 		overflow: hidden;
 	}
 
+	.card.found {
+		border: none;
+	}
+
 	.card:hover {
 		cursor: pointer;
 		border: 1px solid rgb(168, 114, 250);
 		box-shadow: 1px 1px 5px rgb(182, 145, 236);
+	}
+
+	.card.found:hover {
+		border: none;
+		box-shadow: none;
+		cursor: none;
+		pointer-events: none;
 	}
 
 	.card img {

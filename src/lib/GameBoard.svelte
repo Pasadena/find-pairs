@@ -2,6 +2,7 @@
 	import Card from './Card.svelte';
 	import { images } from '$utils/images';
 	import type { PlayingCard, ActivePair } from '$core/types';
+	import { CardState } from '$core/types';
 
 	const cards = [
 		...images,
@@ -40,8 +41,11 @@
 			<Card
 				{card}
 				onCardSelected={onGuess}
-				active={card.id === activePair.first?.id || card.id === activePair.second?.id}
-				revealed={revealed.includes(card.id)}
+				state={revealed.includes(card.id)
+					? CardState.FOUND
+					: [activePair.first?.id, activePair.second?.id].includes(card.id)
+					? CardState.ACTIVE
+					: CardState.INACTIVE}
 			/>
 		{/each}
 	</div>
