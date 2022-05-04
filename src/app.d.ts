@@ -12,4 +12,17 @@ declare namespace App {
 	// interface Session {}
 
 	// interface Stuff {}
+
+	declare interface PlayingCard {
+		id: string;
+		path: string;
+	}
+}
+
+declare global {
+	type PlayingCard = {
+		id: string;
+		path: string;
+		order: number;
+	};
 }
