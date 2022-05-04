@@ -20,10 +20,10 @@
 		if (activePair.first) {
 			activePair.second = card;
 			if (activePair.first.path === card.path) {
-				revealed.push(activePair.first.id);
-				revealed.push(card.id);
-				revealed = revealed;
+				revealed = [...revealed, activePair.first.id, card.id];
+				remainingPairs -= 1;
 			}
+			guesses += 1;
 			setTimeout(() => (activePair = { first: undefined, second: undefined }), 1000);
 		} else {
 			activePair.first = card;
