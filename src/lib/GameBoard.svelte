@@ -1,15 +1,11 @@
 <script lang="ts">
 	import Card from './Card.svelte';
 	import { images } from '$utils/images';
-
-	type ActivePair = {
-		first?: PlayingCard;
-		second?: PlayingCard;
-	};
+	import type { PlayingCard, ActivePair } from '$core/types';
 
 	const cards = [
 		...images,
-		...images.map((image, index) => ({
+		...images.map((image) => ({
 			...image,
 			id: `${image.id}_2`
 		}))
@@ -22,7 +18,7 @@
 		console.log('FOO', activePair, card);
 		if (activePair.first) {
 			activePair.second = card;
-			if (activePair.first.order === card.order) {
+			if (activePair.first.path === card.path) {
 				revealed.push(activePair.first.id);
 				revealed.push(card.id);
 				revealed = revealed;

@@ -1,5 +1,7 @@
 <script lang="ts">
-	export let card: PlayingCard = undefined;
+	import type { PlayingCard } from '$core/types';
+
+	export let card: PlayingCard;
 	export let revealed = false;
 	export let active = false;
 	export let onCardSelected: (card: PlayingCard) => void;

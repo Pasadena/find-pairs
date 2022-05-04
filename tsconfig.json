@@ -17,7 +17,9 @@
 			"$utils": ["src/utils"],
 			"$utils/*": ["src/utils/*"],
 			"$lib": ["src/lib"],
-			"$lib/*": ["src/lib/*"]
+			"$lib/*": ["src/lib/*"],
+			"$core": ["src/core"],
+			"$core/*": ["src/core/*"]
 		}
 	}
 }
