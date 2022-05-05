@@ -20,6 +20,8 @@
 
 <style>
 	.card {
+		height: 100%;
+		width: 100%;
 		border: 1px solid salmon;
 		border-radius: 1rem;
 		display: flex;
@@ -47,7 +49,7 @@
 	}
 
 	.card img {
-		height: 200px;
+		height: 100%;
 		width: 100%;
 		flex-grow: 0;
 		object-fit: cover;

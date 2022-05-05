@@ -13,7 +13,6 @@
 
 <section>
 	<h1>Etsi parit</h1>
-
 	<GameBoard />
 </section>
 
@@ -27,6 +26,10 @@
 	}
 
 	h1 {
+		margin: 0;
+		padding: 1rem;
+		background-color: hotpink;
 		width: 100%;
+		font-size: 3rem;
 	}
 </style>

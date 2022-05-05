@@ -31,7 +31,7 @@
 	}
 </script>
 
-<div>
+<div class="board">
 	<div class="details">
 		<p>Pairs remaining: {remainingPairs}</p>
 		<p>Guesses: {guesses}</p>
@@ -52,15 +52,26 @@
 </div>
 
 <style>
+	.board {
+		padding: 1rem;
+	}
 	.cards {
 		width: 100%;
 		display: grid;
 		row-gap: 1rem;
 		column-gap: 1rem;
-		grid-template-columns: 200px 200px 200px;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	@media (min-width: 600px) {
+		.cards {
+			grid-template-columns: 30% 30% 30%;
+		}
 	}
 	.details {
 		display: flex;
 		justify-content: space-between;
+		font-size: 1.5rem;
+		font-weight: 600;
 	}
 </style>
