@@ -54,6 +54,8 @@
 <style>
 	.board {
 		padding: 1rem;
+		width: 100%;
+		box-sizing: border-box;
 	}
 	.cards {
 		width: 100%;
@@ -65,7 +67,7 @@
 
 	@media (min-width: 600px) {
 		.cards {
-			grid-template-columns: 30% 30% 30%;
+			grid-template-columns: 1fr 1fr 1fr;
 		}
 	}
 	.details {

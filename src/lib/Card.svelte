@@ -6,7 +6,7 @@
 	export let onCardSelected: (card: PlayingCard) => void;
 
 	function onClick() {
-		if (state !== CardState.FOUND) {
+		if (![CardState.FOUND, CardState.ACTIVE].includes(state)) {
 			onCardSelected(card);
 		}
 	}
