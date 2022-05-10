@@ -15,18 +15,42 @@
 	let remainingPairs = images.length;
 	let activePair: ActivePair = { first: undefined, second: undefined };
 	let revealed: string[] = [];
-	function onGuess(card: PlayingCard) {
-		console.log('FOO', activePair, card);
-		if (activePair.first) {
-			activePair.second = card;
-			if (activePair.first.path === card.path) {
-				revealed = [...revealed, activePair.first.id, card.id];
+	let currentTimeout: ReturnType<typeof setTimeout>;
+
+	function clearPossibleTimeout() {
+		if (currentTimeout) {
+			clearTimeout(currentTimeout);
+		}
+	}
+
+	function onFirstCardRevealed(card: PlayingCard) {
+		activePair.first = card;
+	}
+
+	function onSecondCardRevealed(card: PlayingCard) {
+		const { path, id } = activePair.first!;
+		if (path === card.path) {
+			currentTimeout = setTimeout(() => {
+				activePair = { first: undefined, second: undefined };
+				revealed = [...revealed, id, card.id];
 				remainingPairs -= 1;
-			}
-			guesses += 1;
-			setTimeout(() => (activePair = { first: undefined, second: undefined }), 1000);
+			}, 1000);
 		} else {
-			activePair.first = card;
+			currentTimeout = setTimeout(
+				() => (activePair = { first: undefined, second: undefined }),
+				1000
+			);
+		}
+		guesses += 1;
+		activePair.second = card;
+	}
+
+	function onGuess(card: PlayingCard) {
+		clearPossibleTimeout();
+		if (activePair.first) {
+			onSecondCardRevealed(card);
+		} else {
+			onFirstCardRevealed(card);
 		}
 	}
 </script>
