@@ -87,11 +87,13 @@
 		row-gap: 1rem;
 		column-gap: 1rem;
 		grid-template-columns: 1fr 1fr;
+		grid-auto-rows: 200px;
 	}
 
 	@media (min-width: 600px) {
 		.cards {
 			grid-template-columns: 1fr 1fr 1fr;
+			grid-auto-rows: 400px;
 		}
 	}
 	.details {
