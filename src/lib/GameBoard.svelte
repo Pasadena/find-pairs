@@ -53,6 +53,13 @@
 			onFirstCardRevealed(card);
 		}
 	}
+
+	function resetBoard() {
+		guesses = 0;
+		remainingPairs = images.length;
+		activePair = { first: undefined, second: undefined };
+		revealed = [];
+	}
 </script>
 
 <div class="board">
@@ -60,6 +67,12 @@
 		<p>Pairs remaining: {remainingPairs}</p>
 		<p>Guesses: {guesses}</p>
 	</div>
+	{#if remainingPairs === 0}
+		<div class="success-block">
+			<p class="congratulations-msg">Onneksi olkoon! Kaikki parit löytyivät :)</p>
+			<button on:click={resetBoard}>Uusi peli</button>
+		</div>
+	{/if}
 	<div class="cards">
 		{#each cards ?? [] as card}
 			<Card
@@ -101,5 +114,30 @@
 		justify-content: space-between;
 		font-size: 1.5rem;
 		font-weight: 600;
+	}
+
+	.success-block {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	.congratulations-msg {
+		font-size: 3rem;
+	}
+
+	button {
+		border-radius: 6px;
+		background-color: hotpink;
+		color: white;
+		padding: 1rem 0.5rem;
+		font-size: 1.5rem;
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+
+	button:hover {
+		background-color: white;
+		color: hotpink;
 	}
 </style>
