@@ -3,6 +3,7 @@
 	import { images } from '$utils/images';
 	import type { PlayingCard, ActivePair } from '$core/types';
 	import { CardState } from '$core/types';
+	import SuccessInfo from './SuccessInfo.svelte';
 
 	const cards = [
 		...images,
@@ -64,14 +65,11 @@
 
 <div class="board">
 	<div class="details">
-		<p>Pairs remaining: {remainingPairs}</p>
-		<p>Guesses: {guesses}</p>
+		<p>Pareja jäljellä: {remainingPairs}</p>
+		<p>Arvauksia: {guesses}</p>
 	</div>
 	{#if remainingPairs === 0}
-		<div class="success-block">
-			<p class="congratulations-msg">Onneksi olkoon! Kaikki parit löytyivät :)</p>
-			<button on:click={resetBoard}>Uusi peli</button>
-		</div>
+		<SuccessInfo onReset={resetBoard} />
 	{/if}
 	<div class="cards">
 		{#each cards ?? [] as card}
@@ -114,30 +112,5 @@
 		justify-content: space-between;
 		font-size: 1.5rem;
 		font-weight: 600;
-	}
-
-	.success-block {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
-	.congratulations-msg {
-		font-size: 3rem;
-	}
-
-	button {
-		border-radius: 6px;
-		background-color: hotpink;
-		color: white;
-		padding: 1rem 0.5rem;
-		font-size: 1.5rem;
-		cursor: pointer;
-		transition: all 0.2s;
-	}
-
-	button:hover {
-		background-color: white;
-		color: hotpink;
 	}
 </style>
