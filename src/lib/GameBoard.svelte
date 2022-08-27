@@ -1,17 +1,11 @@
 <script lang="ts">
 	import Card from './Card.svelte';
-	import { images } from '$utils/images';
+	import { generateCardList } from '$utils/cards';
 	import type { BoardState, PlayingCard } from '$core/types';
 	import { CardState } from '$core/types';
 	import SuccessInfo from './SuccessInfo.svelte';
 
-	const cards = [
-		...images,
-		...images.map((image) => ({
-			...image,
-			id: `${image.id}_2`
-		}))
-	].sort((a, b) => 0.5 - Math.random());
+	const cards = generateCardList(3);
 
 	let boardState: BoardState = {
 		availablePairs: cards.length / 2,
