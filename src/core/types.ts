@@ -1,3 +1,10 @@
+export type BoardState = {
+	availablePairs: number;
+	foundPairs: string[];
+	guesses: number;
+	activePair: ActivePair;
+};
+
 export enum CardState {
 	FOUND = 'found',
 	ACTIVE = 'active',

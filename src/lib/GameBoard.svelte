@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Card from './Card.svelte';
 	import { images } from '$utils/images';
-	import type { PlayingCard, ActivePair } from '$core/types';
+	import type { BoardState, PlayingCard } from '$core/types';
 	import { CardState } from '$core/types';
 	import SuccessInfo from './SuccessInfo.svelte';
 
@@ -12,10 +12,13 @@
 			id: `${image.id}_2`
 		}))
 	].sort((a, b) => 0.5 - Math.random());
-	let guesses = 0;
-	let remainingPairs = images.length;
-	let activePair: ActivePair = { first: undefined, second: undefined };
-	let revealed: string[] = [];
+
+	let boardState: BoardState = {
+		availablePairs: cards.length / 2,
+		foundPairs: [],
+		guesses: 0,
+		activePair: { first: undefined, second: undefined }
+	};
 	let currentTimeout: ReturnType<typeof setTimeout>;
 
 	function clearPossibleTimeout() {
@@ -25,28 +28,46 @@
 	}
 
 	function onFirstCardRevealed(card: PlayingCard) {
-		activePair.first = card;
+		boardState = {
+			...boardState,
+			activePair: {
+				first: card
+			}
+		};
 	}
 
 	function onSecondCardRevealed(card: PlayingCard) {
+		let { activePair, foundPairs, availablePairs, guesses } = boardState;
 		const { path, id } = activePair.first!;
 		if (path === card.path) {
 			currentTimeout = setTimeout(() => {
-				activePair = { first: undefined, second: undefined };
-				revealed = [...revealed, id, card.id];
-				remainingPairs -= 1;
+				boardState = {
+					...boardState,
+					activePair: { first: undefined, second: undefined },
+					foundPairs: [...foundPairs, id, card.id],
+					availablePairs: (availablePairs -= 1)
+				};
 			}, 1000);
 		} else {
-			currentTimeout = setTimeout(
-				() => (activePair = { first: undefined, second: undefined }),
-				1000
-			);
+			currentTimeout = setTimeout(() => {
+				boardState = {
+					...boardState,
+					activePair: { first: undefined, second: undefined }
+				};
+			}, 1000);
 		}
-		guesses += 1;
-		activePair.second = card;
+		boardState = {
+			...boardState,
+			guesses: (guesses += 1),
+			activePair: {
+				...activePair,
+				second: card
+			}
+		};
 	}
 
 	function onGuess(card: PlayingCard) {
+		const { activePair } = boardState;
 		clearPossibleTimeout();
 		if (activePair.first) {
 			onSecondCardRevealed(card);
@@ -56,19 +77,21 @@
 	}
 
 	function resetBoard() {
-		guesses = 0;
-		remainingPairs = images.length;
-		activePair = { first: undefined, second: undefined };
-		revealed = [];
+		boardState = {
+			availablePairs: cards.length,
+			foundPairs: [],
+			guesses: 0,
+			activePair: { first: undefined, second: undefined }
+		};
 	}
 </script>
 
 <div class="board">
 	<div class="details">
-		<p>Pareja jäljellä: {remainingPairs}</p>
-		<p>Arvauksia: {guesses}</p>
+		<p>Pareja jäljellä: {boardState.availablePairs}</p>
+		<p>Arvauksia: {boardState.guesses}</p>
 	</div>
-	{#if remainingPairs === 0}
+	{#if boardState.availablePairs === 0}
 		<SuccessInfo onReset={resetBoard} />
 	{/if}
 	<div class="cards">
@@ -76,9 +99,9 @@
 			<Card
 				{card}
 				onCardSelected={onGuess}
-				state={revealed.includes(card.id)
+				state={boardState.foundPairs.includes(card.id)
 					? CardState.FOUND
-					: [activePair.first?.id, activePair.second?.id].includes(card.id)
+					: [boardState.activePair.first?.id, boardState.activePair.second?.id].includes(card.id)
 					? CardState.ACTIVE
 					: CardState.INACTIVE}
 			/>
