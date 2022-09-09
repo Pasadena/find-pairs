@@ -10,6 +10,8 @@ const images: PlayingCard[] = [
 	{ id: 'malla_guitar', path: malla_guitar }
 ];
 
+export const IMAGE_COUNT = images.length;
+
 const shuffleCards = (cards: PlayingCard[]) => cards.sort(() => 0.5 - Math.random());
 
 export const generateCardList = (seed: number) => {

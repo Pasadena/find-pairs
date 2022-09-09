@@ -1,11 +1,12 @@
 <script lang="ts">
 	import Card from './Card.svelte';
-	import { generateCardList } from '$utils/cards';
+	import { generateCardList, IMAGE_COUNT } from '$utils/cards';
 	import type { BoardState, PlayingCard } from '$core/types';
 	import { CardState } from '$core/types';
 	import SuccessInfo from './SuccessInfo.svelte';
 
-	const cards = generateCardList(3);
+	let cards = generateCardList(3);
+	$: pairCount = cards.length / 2;
 
 	let boardState: BoardState = {
 		availablePairs: cards.length / 2,
@@ -14,6 +15,14 @@
 		activePair: { first: undefined, second: undefined }
 	};
 	let currentTimeout: ReturnType<typeof setTimeout>;
+
+	function setBoardSize(e: Event) {
+		if (e.target) {
+			const size = (e.target as HTMLSelectElement).value;
+			cards = generateCardList(Number(size));
+			resetBoard();
+		}
+	}
 
 	function clearPossibleTimeout() {
 		if (currentTimeout) {
@@ -81,14 +90,28 @@
 </script>
 
 <div class="board">
-	<div class="details">
-		<p>Pareja jäljellä: {boardState.availablePairs}</p>
-		<p>Arvauksia: {boardState.guesses}</p>
+	<div class="board-controls">
+		<div class="details">
+			<p>Pareja jäljellä: {pairCount}</p>
+			<p>Arvauksia: {boardState.guesses}</p>
+		</div>
+		<div class="size-container">
+			<label for="size-select">Pareja:</label>
+			<select id="size-select" on:change={setBoardSize} value={pairCount}>
+				{#each Array(IMAGE_COUNT) as _, i}
+					<option id={String(i + 1)} selected={i === cards.length}>{i + 1}</option>
+				{/each}
+			</select>
+		</div>
 	</div>
+
 	{#if boardState.availablePairs === 0}
 		<SuccessInfo onReset={resetBoard} />
 	{/if}
-	<div class="cards">
+	<div
+		class="cards"
+		style="grid-template-columns: repeat({Math.min(pairCount, 3)}, minmax(100px, 400px));"
+	>
 		{#each cards ?? [] as card}
 			<Card
 				{card}
@@ -109,25 +132,41 @@
 		width: 100%;
 		box-sizing: border-box;
 	}
+
+	.board-controls {
+		display: flex;
+		font-size: 1.2rem;
+		font-weight: 600;
+	}
+
+	.size-container {
+		margin-top: 0.5rem;
+		margin-left: auto;
+	}
+
+	p {
+		margin-top: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	select {
+		min-width: 100px;
+		font-size: 1.2rem;
+	}
 	.cards {
-		width: 100%;
 		display: grid;
+		align-items: center;
+		justify-content: center;
 		row-gap: 1rem;
 		column-gap: 1rem;
-		grid-template-columns: 1fr 1fr;
-		grid-auto-rows: 200px;
 	}
 
 	@media (min-width: 600px) {
 		.cards {
-			grid-template-columns: 1fr 1fr 1fr;
 			grid-auto-rows: 400px;
 		}
-	}
-	.details {
-		display: flex;
-		justify-content: space-between;
-		font-size: 1.5rem;
-		font-weight: 600;
+		.board-controls {
+			font-size: 1.5rem;
+		}
 	}
 </style>
