@@ -1,4 +1,5 @@
 export type BoardState = {
+	cards: PlayingCard[];
 	availablePairs: number;
 	foundPairs: string[];
 	guesses: number;

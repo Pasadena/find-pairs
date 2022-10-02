@@ -1,26 +1,29 @@
 <script lang="ts">
 	import Card from './Card.svelte';
-	import { generateCardList, IMAGE_COUNT } from '$utils/cards';
+	import { IMAGE_COUNT } from '$utils/cards';
 	import type { BoardState, PlayingCard } from '$core/types';
 	import { CardState } from '$core/types';
 	import SuccessInfo from './SuccessInfo.svelte';
+	import {
+		boardState,
+		recordFailedGuess,
+		recordSuccessfulGuess,
+		setDefaultState,
+		showFirstGuess,
+		showSecondGuess,
+		updateBoardSize
+	} from '$core/boardStore';
 
-	let cards = generateCardList(3);
-	$: pairCount = cards.length / 2;
-
-	let boardState: BoardState = {
-		availablePairs: cards.length / 2,
-		foundPairs: [],
-		guesses: 0,
-		activePair: { first: undefined, second: undefined }
-	};
+	let board: BoardState;
+	$: pairCount = board.cards.length / 2;
+	boardState.subscribe((state) => {
+		board = state;
+	});
 	let currentTimeout: ReturnType<typeof setTimeout>;
 
 	function setBoardSize(e: Event) {
 		if (e.target) {
-			const size = (e.target as HTMLSelectElement).value;
-			cards = generateCardList(Number(size));
-			resetBoard();
+			updateBoardSize(Number((e.target as HTMLSelectElement).value));
 		}
 	}
 
@@ -30,95 +33,66 @@
 		}
 	}
 
-	function onFirstCardRevealed(card: PlayingCard) {
-		boardState = {
-			...boardState,
-			activePair: {
-				first: card
-			}
-		};
-	}
-
 	function onSecondCardRevealed(card: PlayingCard) {
-		let { activePair, foundPairs, availablePairs, guesses } = boardState;
+		let { activePair, foundPairs, availablePairs, guesses } = board;
 		const { path, id } = activePair.first!;
 		if (path === card.path) {
 			currentTimeout = setTimeout(() => {
-				boardState = {
-					...boardState,
-					activePair: { first: undefined, second: undefined },
-					foundPairs: [...foundPairs, id, card.id],
-					availablePairs: (availablePairs -= 1)
-				};
+				recordSuccessfulGuess(card);
 			}, 1000);
 		} else {
 			currentTimeout = setTimeout(() => {
-				boardState = {
-					...boardState,
-					activePair: { first: undefined, second: undefined }
-				};
+				recordFailedGuess();
 			}, 1000);
 		}
-		boardState = {
-			...boardState,
-			guesses: (guesses += 1),
-			activePair: {
-				...activePair,
-				second: card
-			}
-		};
+		showSecondGuess(card);
 	}
 
 	function onGuess(card: PlayingCard) {
-		const { activePair } = boardState;
+		const { activePair } = board;
 		clearPossibleTimeout();
 		if (activePair.first) {
 			onSecondCardRevealed(card);
 		} else {
-			onFirstCardRevealed(card);
+			showFirstGuess(card);
 		}
 	}
 
 	function resetBoard() {
-		boardState = {
-			availablePairs: cards.length,
-			foundPairs: [],
-			guesses: 0,
-			activePair: { first: undefined, second: undefined }
-		};
+		setDefaultState();
 	}
 </script>
 
 <div class="board">
 	<div class="board-controls">
 		<div class="details">
-			<p>Pareja jäljellä: {pairCount}</p>
-			<p>Arvauksia: {boardState.guesses}</p>
+			<p>Pareja jäljellä: {board.availablePairs}</p>
+			<p>Arvauksia: {board.guesses}</p>
 		</div>
 		<div class="size-container">
 			<label for="size-select">Pareja:</label>
 			<select id="size-select" on:change={setBoardSize} value={pairCount}>
 				{#each Array(IMAGE_COUNT) as _, i}
-					<option id={String(i + 1)} selected={i === cards.length}>{i + 1}</option>
+					<option id={String(i + 1)} selected={i === pairCount}>{i + 1}</option>
 				{/each}
 			</select>
 		</div>
 	</div>
 
-	{#if boardState.availablePairs === 0}
+	{#if board.availablePairs === 0}
 		<SuccessInfo onReset={resetBoard} />
 	{/if}
 	<div
 		class="cards"
 		style="grid-template-columns: repeat({Math.min(pairCount, 3)}, minmax(100px, 400px));"
 	>
-		{#each cards ?? [] as card}
+		{#each board.cards ?? [] as card}
 			<Card
 				{card}
 				onCardSelected={onGuess}
-				state={boardState.foundPairs.includes(card.id)
+				state={board.foundPairs.includes(card.id)
 					? CardState.FOUND
-					: [boardState.activePair.first?.id, boardState.activePair.second?.id].includes(card.id)
+					: [board.activePair.first?.id, board.activePair.second?.id].includes(card.id)
 					? CardState.ACTIVE
 					: CardState.INACTIVE}
 			/>
