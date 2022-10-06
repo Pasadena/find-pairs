@@ -6,13 +6,18 @@
 	export let onCardSelected: (card: PlayingCard) => void;
 
 	function onClick() {
-		if (![CardState.FOUND, CardState.ACTIVE].includes(state)) {
+		if (state === CardState.INACTIVE) {
 			onCardSelected(card);
 		}
 	}
 </script>
 
-<div class="card {state == CardState.FOUND && 'found'}" on:click={onClick}>
+<div
+	class="card"
+	class:found={state == CardState.FOUND}
+	class:disabled={state == CardState.DISABLED}
+	on:click={onClick}
+>
 	{#if state !== CardState.FOUND}
 		<img src={state === CardState.ACTIVE ? card.path : 'images/question_mark.png'} alt={card.id} />
 	{/if}
@@ -33,6 +38,11 @@
 
 	.card.found {
 		border: none;
+	}
+
+	.card.disabled {
+		pointer-events: none;
+		opacity: 0.4;
 	}
 
 	.card:hover {

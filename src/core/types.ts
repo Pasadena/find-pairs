@@ -9,7 +9,8 @@ export type BoardState = {
 export enum CardState {
 	FOUND = 'found',
 	ACTIVE = 'active',
-	INACTIVE = 'inactive'
+	INACTIVE = 'inactive',
+	DISABLED = 'disabled'
 }
 
 export type PlayingCard = {

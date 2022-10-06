@@ -15,11 +15,10 @@
 	} from '$core/boardStore';
 
 	let board: BoardState;
-	$: pairCount = board.cards.length / 2;
 	boardState.subscribe((state) => {
 		board = state;
 	});
-	let currentTimeout: ReturnType<typeof setTimeout>;
+	$: pairCount = board.cards.length / 2;
 
 	function setBoardSize(e: Event) {
 		if (e.target) {
@@ -27,30 +26,18 @@
 		}
 	}
 
-	function clearPossibleTimeout() {
-		if (currentTimeout) {
-			clearTimeout(currentTimeout);
-		}
-	}
-
 	function onSecondCardRevealed(card: PlayingCard) {
-		let { activePair, foundPairs, availablePairs, guesses } = board;
-		const { path, id } = activePair.first!;
-		if (path === card.path) {
-			currentTimeout = setTimeout(() => {
-				recordSuccessfulGuess(card);
-			}, 1000);
-		} else {
-			currentTimeout = setTimeout(() => {
-				recordFailedGuess();
-			}, 1000);
-		}
+		let { activePair } = board;
+		const { path } = activePair.first!;
+		setTimeout(
+			() => (path === card.path ? recordSuccessfulGuess(card) : recordFailedGuess()),
+			1000
+		);
 		showSecondGuess(card);
 	}
 
 	function onGuess(card: PlayingCard) {
 		const { activePair } = board;
-		clearPossibleTimeout();
 		if (activePair.first) {
 			onSecondCardRevealed(card);
 		} else {
@@ -60,6 +47,18 @@
 
 	function resetBoard() {
 		setDefaultState();
+	}
+
+	function getCardState(card: PlayingCard) {
+		if (board.foundPairs.includes(card.id)) {
+			return CardState.FOUND;
+		} else if ([board.activePair.first?.id, board.activePair.second?.id].includes(card.id)) {
+			return CardState.ACTIVE;
+		} else if (!!board.activePair.second) {
+			return CardState.DISABLED;
+		} else {
+			return CardState.INACTIVE;
+		}
 	}
 </script>
 
@@ -87,15 +86,7 @@
 		style="grid-template-columns: repeat({Math.min(pairCount, 3)}, minmax(100px, 400px));"
 	>
 		{#each board.cards ?? [] as card}
-			<Card
-				{card}
-				onCardSelected={onGuess}
-				state={board.foundPairs.includes(card.id)
-					? CardState.FOUND
-					: [board.activePair.first?.id, board.activePair.second?.id].includes(card.id)
-					? CardState.ACTIVE
-					: CardState.INACTIVE}
-			/>
+			<Card {card} onCardSelected={onGuess} state={getCardState(card)} />
 		{/each}
 	</div>
 </div>
