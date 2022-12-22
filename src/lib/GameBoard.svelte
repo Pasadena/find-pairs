@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Card from './Card.svelte';
+	import GameDetails from './GameDetails.svelte';
 	import { IMAGE_COUNT } from '$utils/cards';
 	import type { BoardState, PlayingCard } from '$core/types';
 	import { CardState } from '$core/types';
@@ -13,18 +14,13 @@
 		showSecondGuess,
 		updateBoardSize
 	} from '$core/boardStore';
+	import { toastMatchFound, toastNoMatch } from '$core/toasts';
 
 	let board: BoardState;
 	boardState.subscribe((state) => {
 		board = state;
 	});
 	$: pairCount = board.cards.length / 2;
-
-	function setBoardSize(e: Event) {
-		if (e.target) {
-			updateBoardSize(Number((e.target as HTMLSelectElement).value));
-		}
-	}
 
 	function onSecondCardRevealed(card: PlayingCard) {
 		let { activePair } = board;
@@ -33,6 +29,7 @@
 			() => (path === card.path ? recordSuccessfulGuess(card) : recordFailedGuess()),
 			1000
 		);
+		path === card.path ? toastMatchFound('Pari löytyi!') : toastNoMatch('Ei paria :(');
 		showSecondGuess(card);
 	}
 
@@ -60,78 +57,47 @@
 			return CardState.INACTIVE;
 		}
 	}
+	// style="grid-template-columns: repeat({Math.min(pairCount, 3)}, minmax(100px, 400px));"
 </script>
 
 <div class="board">
-	<div class="board-controls">
-		<div class="details">
-			<p>Pareja jäljellä: {board.availablePairs}</p>
-			<p>Arvauksia: {board.guesses}</p>
-		</div>
-		<div class="size-container">
-			<label for="size-select">Pareja:</label>
-			<select id="size-select" on:change={setBoardSize} value={pairCount}>
-				{#each Array(IMAGE_COUNT) as _, i}
-					<option id={String(i + 1)} selected={i === pairCount}>{i + 1}</option>
-				{/each}
-			</select>
-		</div>
-	</div>
-
 	{#if board.availablePairs === 0}
 		<SuccessInfo onReset={resetBoard} />
 	{/if}
-	<div
-		class="cards"
-		style="grid-template-columns: repeat({Math.min(pairCount, 3)}, minmax(100px, 400px));"
-	>
+	<div class="cards">
 		{#each board.cards ?? [] as card}
 			<Card {card} onCardSelected={onGuess} state={getCardState(card)} />
 		{/each}
 	</div>
+	<GameDetails />
 </div>
 
 <style>
 	.board {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 		padding: 1rem;
 		width: 100%;
 		box-sizing: border-box;
 	}
-
-	.board-controls {
-		display: flex;
-		font-size: 1.2rem;
-		font-weight: 600;
-	}
-
-	.size-container {
-		margin-top: 0.5rem;
-		margin-left: auto;
-	}
-
-	p {
-		margin-top: 0.5rem;
-		margin-bottom: 0.5rem;
-	}
-
-	select {
-		min-width: 100px;
-		font-size: 1.2rem;
-	}
 	.cards {
+		grid-auto-rows: auto;
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 		display: grid;
 		align-items: center;
 		justify-content: center;
 		row-gap: 1rem;
 		column-gap: 1rem;
+		width: 100%;
 	}
 
 	@media (min-width: 600px) {
 		.cards {
-			grid-auto-rows: 400px;
-		}
-		.board-controls {
-			font-size: 1.5rem;
+			width: 50%;
+			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 		}
 	}
 </style>

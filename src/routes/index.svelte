@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import GameBoard from '$lib/GameBoard.svelte';
 </script>
 
@@ -14,10 +15,14 @@
 <section>
 	<h1>Etsi parit</h1>
 	<GameBoard />
+	<SvelteToast
+		options={{ duration: 1000, dismissable: false, reversed: true, intro: { y: 192 } }}
+	/>
 </section>
 
 <style>
 	section {
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -28,7 +33,8 @@
 	h1 {
 		margin: 0;
 		padding: 1rem;
-		background-color: hotpink;
+		background-color: #4b0082;
+		color: white;
 		width: 100%;
 		font-size: 3rem;
 	}

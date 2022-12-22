@@ -19,7 +19,11 @@
 	on:click={onClick}
 >
 	{#if state !== CardState.FOUND}
-		<img src={state === CardState.ACTIVE ? card.path : 'images/question_mark.png'} alt={card.id} />
+		<img
+			src={state === CardState.ACTIVE ? card.path : 'images/question-mark-icon.svg'}
+			alt={card.id}
+			class:question-mark={state !== CardState.ACTIVE}
+		/>
 	{/if}
 </div>
 
@@ -61,7 +65,11 @@
 	.card img {
 		height: 100%;
 		width: 100%;
-		flex-grow: 0;
 		object-fit: cover;
+	}
+
+	img.question-mark {
+		height: 90%;
+		object-fit: unset;
 	}
 </style>
