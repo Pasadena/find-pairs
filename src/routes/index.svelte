@@ -13,7 +13,6 @@
 </svelte:head>
 
 <section>
-	<h1>Etsi parit</h1>
 	<GameBoard />
 	<SvelteToast
 		options={{ duration: 1000, dismissable: false, reversed: true, intro: { y: 192 } }}
@@ -28,14 +27,5 @@
 		justify-content: center;
 		align-items: center;
 		flex: 1;
-	}
-
-	h1 {
-		margin: 0;
-		padding: 1rem;
-		background-color: #4b0082;
-		color: white;
-		width: 100%;
-		font-size: 3rem;
 	}
 </style>

@@ -69,7 +69,6 @@
 			<Card {card} onCardSelected={onGuess} state={getCardState(card)} />
 		{/each}
 	</div>
-	<GameDetails />
 </div>
 
 <style>
@@ -79,7 +78,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding: 1rem;
+		padding: 0rem 1rem;
 		width: 100%;
 		box-sizing: border-box;
 	}

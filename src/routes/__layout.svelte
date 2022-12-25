@@ -1,12 +1,17 @@
 <script lang="ts">
 	import '../app.css';
+	import GameDetails from '$lib/GameDetails.svelte';
 </script>
+
+<header>
+	<h1>Etsi parit</h1>
+</header>
 
 <main>
 	<slot />
 </main>
 
-<footer />
+<footer><GameDetails /></footer>
 
 <style>
 	main {
@@ -20,17 +25,22 @@
 		margin: 0 auto;
 		box-sizing: border-box;
 	}
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 40px;
+	header {
+		background-color: var(--primary-color);
+		width: 100%;
+		margin: 0;
+		padding: 1rem;
+		box-sizing: border-box;
 	}
 
-	@media (min-width: 480px) {
-		footer {
-			padding: 40px 0;
-		}
+	footer {
+		background-color: var(--primary-color);
+	}
+
+	h1 {
+		color: var(--secondary-color);
+		font-size: 3rem;
+		padding: 0;
+		margin: 0;
 	}
 </style>

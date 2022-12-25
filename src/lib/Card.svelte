@@ -31,8 +31,9 @@
 	.card {
 		height: 100%;
 		width: 100%;
-		border: 1px solid salmon;
+		border: 1px solid var(--primary-color);
 		border-radius: 1rem;
+		box-shadow: 1px 1px 3px var(--primary-color);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -42,6 +43,7 @@
 
 	.card.found {
 		border: none;
+		box-shadow: none;
 	}
 
 	.card.disabled {
@@ -51,8 +53,8 @@
 
 	.card:hover {
 		cursor: pointer;
-		border: 1px solid rgb(168, 114, 250);
-		box-shadow: 1px 1px 5px rgb(182, 145, 236);
+		border: 1px solid var(--accent-color);
+		box-shadow: 2px 2px 5px var(--accent-color);
 	}
 
 	.card.found:hover {

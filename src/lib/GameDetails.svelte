@@ -36,21 +36,20 @@
 <style>
 	.board-controls {
 		width: 100%;
-		background-color: #4b0082;
 		color: white;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		font-size: 1.2rem;
 		font-weight: 600;
-		position: fixed;
-		bottom: 0;
 	}
 
 	.content {
 		width: 100%;
 		display: flex;
-		margin: 1rem;
+		margin-top: 0.5rem;
+		margin-left: 1rem;
+		margin-right: 1rem;
 	}
 
 	.details {
@@ -63,7 +62,7 @@
 	}
 
 	p {
-		margin-top: 0.5rem;
+		margin-top: 0;
 		margin-bottom: 0.5rem;
 		color: white;
 	}
