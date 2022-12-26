@@ -2,7 +2,7 @@ import { generateCardList } from '$utils/cards';
 import { writable } from 'svelte/store';
 import type { BoardState, PlayingCard } from './types';
 
-const DEFAULT_AMOUNT_OF_PAIRS = 3;
+const DEFAULT_AMOUNT_OF_PAIRS = 6;
 
 const getDefaultState = (cards: PlayingCard[]): BoardState => ({
 	cards,
