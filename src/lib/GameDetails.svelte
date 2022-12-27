@@ -47,7 +47,7 @@
 	.content {
 		width: 100%;
 		display: flex;
-		margin-top: 0.5rem;
+		margin-top: 1rem;
 		margin-left: 1rem;
 		margin-right: 1rem;
 	}
@@ -58,7 +58,6 @@
 
 	.size-container {
 		margin-left: auto;
-		margin-top: 0.5rem;
 	}
 
 	p {

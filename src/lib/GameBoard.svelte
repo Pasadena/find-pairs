@@ -83,20 +83,26 @@
 		box-sizing: border-box;
 	}
 	.cards {
-		grid-auto-rows: auto;
-		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 		align-items: center;
 		justify-content: center;
 		row-gap: 1rem;
 		column-gap: 1rem;
 		width: 100%;
+		flex: 1;
 	}
 
 	@media (min-width: 600px) {
+		.board {
+			max-height: 500px;
+			overflow: scroll;
+			justify-content: initial;
+		}
 		.cards {
 			width: 50%;
-			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+			grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+			grid-auto-rows: minmax(200px, auto);
 		}
 	}
 </style>

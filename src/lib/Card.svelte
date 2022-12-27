@@ -16,14 +16,18 @@
 	class="card"
 	class:found={state == CardState.FOUND}
 	class:disabled={state == CardState.DISABLED}
+	class:flipped={state == CardState.ACTIVE}
 	on:click={onClick}
 >
 	{#if state !== CardState.FOUND}
-		<img
-			src={state === CardState.ACTIVE ? card.path : 'images/question-mark-icon.svg'}
-			alt={card.id}
-			class:question-mark={state !== CardState.ACTIVE}
-		/>
+		<div class="card-inner">
+			<div class="card-front">
+				<img src="images/question-mark-icon.svg" alt={card.id} />
+			</div>
+			<div class="card-back">
+				<img src={card.path} alt={card.id} />
+			</div>
+		</div>
 	{/if}
 </div>
 
@@ -37,8 +41,46 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		transition: border 0.2s ease-in-out;
-		overflow: hidden;
+		perspective: 1000;
+	}
+
+	.card-inner {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		transition: transform 0.6s;
+		transform-style: preserve-3d;
+	}
+
+	.card-front,
+	.card-back {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+	}
+
+	.card-front img {
+		height: 90%;
+	}
+
+	.card-back {
+		transform: rotateY(180deg);
+	}
+
+	.card-back img {
+		height: 100%;
+		width: 100%;
+		object-fit: cover;
+		border-radius: 1rem;
+	}
+
+	.flipped .card-inner {
+		transform: rotateY(180deg);
 	}
 
 	.card.found {
@@ -62,16 +104,5 @@
 		box-shadow: none;
 		cursor: none;
 		pointer-events: none;
-	}
-
-	.card img {
-		height: 100%;
-		width: 100%;
-		object-fit: cover;
-	}
-
-	img.question-mark {
-		height: 90%;
-		object-fit: unset;
 	}
 </style>

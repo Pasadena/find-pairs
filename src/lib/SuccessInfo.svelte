@@ -3,7 +3,8 @@
 </script>
 
 <div class="success-block">
-	<p class="congratulations-msg">Onneksi olkoon! Kaikki parit löytyivät :)</p>
+	<p class="header">Onneksi olkoon!</p>
+	<p class="congratulations-msg">Kaikki parit löytyivät :)</p>
 	<button on:click={onReset}>Uusi peli</button>
 </div>
 
@@ -14,13 +15,21 @@
 		justify-content: center;
 		align-items: center;
 	}
+
+	p {
+		margin-bottom: 0;
+	}
+	.header {
+		font-size: 2.5rem;
+	}
 	.congratulations-msg {
-		font-size: 3rem;
+		font-size: 2rem;
+		margin-bottom: 1rem;
 	}
 	button {
-		border-radius: 6px;
-		background-color: hotpink;
-		color: white;
+		border-radius: 2rem;
+		background-color: var(--accent-color);
+		color: var(--secondary-color);
 		padding: 1rem 0.5rem;
 		font-size: 1.5rem;
 		cursor: pointer;
@@ -28,7 +37,7 @@
 	}
 
 	button:hover {
-		background-color: white;
-		color: hotpink;
+		background-color: var(--secondary-color);
+		color: var(--accent-color);
 	}
 </style>
